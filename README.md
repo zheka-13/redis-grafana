@@ -1,49 +1,16 @@
-# redis-statsd
+# redis-grafana
 
-redis-statsd is a small, dependency free Python program for periodically fetching stats via Redis' `INFO`
-command and emitting them to a local StatsD.
+Based on https://github.com/keenlabs/redis-statsd, dependency free Python program for periodically fetching stats via Redis' `INFO`command and emitting them to carbon server.
 
-# Motivation
 
-At [Keen](http://keen.io) we run some Redis instances in Mesos with dynamically allocated ports. We use Datadog and
-therefore have an on-box StatsD instance to report to. Therefore this little program can be started with a dynamic
-port and report metrics out to DogStatsD!
-
-# Docker
-A public docker image is available on [docker hub](https://hub.docker.com/r/keen/redis-statsd/).
-
-# Notes
-
-## A Word On Counters
-
-Values that are counters in the stats from Redis are converted in to deltas by this program, since that's what StatsD
-expects.
-
-## Optional DogStatsD Tag Support
-
-The `--no-tags` option will disable support for [DogStatsD](http://docs.datadoghq.com/guides/dogstatsd/)-style tags.
 
 # Usage
 
-```
-usage: redis-statsd.py [-h] [--period PERIOD] [--prefix PREFIX]
-                       [--redis-host REDIS_HOST] [--redis-port REDIS_PORT]
-                       [--statsd-host STATSD_HOST] [--statsd-port STATSD_PORT]
-                       [--no-tags]
+Edit script and set all your params in the beginnig of the file (addresses, password etc.)
+Use cron for periodical execution of the script and emmiting metrics to Carbon
 
-Collect metrics from Redis and emit to StatsD
+For example, every minute would be like this:
 
-optional arguments:
-  -h, --help            show this help message and exit
-  --period PERIOD       The period at which to collect and emit metrics
-  --prefix PREFIX       The prefix to use for metric names
-  --redis-host REDIS_HOST
-                        The address of the Redis host to connect to
-  --redis-port REDIS_PORT
-                        The port of the Redis host to connect to
-  --statsd-host STATSD_HOST
-                        The port of the StatsD host to connect to
-  --statsd-port STATSD_PORT
-                        The port of the Redis port to connect to
-  --no-tags             Disable tags for use with DogStatsD
-```
+*/1     *       *       *       *       root    /srv/redis-grafana.py
+
+
